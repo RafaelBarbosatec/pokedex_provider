@@ -1,20 +1,23 @@
 import 'package:app_pokedex/model/pokemon.dart';
 import 'package:app_pokedex/presenter/home_controller.dart';
-import 'package:app_pokedex/view/detail/detail.dart';
+import 'package:app_pokedex/shared/functions.dart';
+import 'package:app_pokedex/view/detail/detail_page.dart';
 import 'package:app_pokedex/view/home/widgets/pokemon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   @override
-  void didChangeDependencies() {
-    context.read<HomeController>().loadPokemon();
-    super.didChangeDependencies();
+  void initState() {
+    postFrame(() {
+      context.read<HomeController>().loadPokemon();
+    });
+    super.initState();
   }
 
   @override
@@ -24,22 +27,23 @@ class _HomeState extends State<Home> {
         title: Text('Pokedex'),
       ),
       body: Consumer<HomeController>(
-        builder: (_, controler, child) {
+        builder: (_, controller, child) {
           return Stack(
             children: [
               ListView.builder(
-                itemCount: controler.pokemonList.length,
+                itemCount: controller.pokemonList.length,
                 itemBuilder: (context, index) {
-                  if (index >= controler.pokemonList.length - 2) {
-                    context.read<HomeController>().loadPokemon(isMore: true);
+                  if (index >= controller.pokemonList.length - 2) {
+                    controller.loadPokemon(isMore: true);
                   }
                   return PokemonWidget(
-                    item: controler.pokemonList[index],
-                    onTap: () => _goToDetail(controler.pokemonList[index]),
+                    item: controller.pokemonList[index],
+                    onTap: () => _goToDetail(controller.pokemonList[index]),
                   );
                 },
               ),
-              if (controler.loading) Center(child: CircularProgressIndicator()),
+              if (controller.loading)
+                Center(child: CircularProgressIndicator()),
             ],
           );
         },

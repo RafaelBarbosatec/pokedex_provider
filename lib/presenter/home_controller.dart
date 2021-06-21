@@ -1,5 +1,6 @@
 import 'package:app_pokedex/model/pokemon.dart';
-import 'package:app_pokedex/model/pokemon_repository.dart';
+import 'package:app_pokedex/model/repoistory/pokemon_repository.dart';
+import 'package:app_pokedex/shared/functions.dart';
 import 'package:flutter/material.dart';
 
 class HomeController extends ChangeNotifier {
@@ -13,7 +14,8 @@ class HomeController extends ChangeNotifier {
 
   void loadPokemon({bool isMore = false}) {
     loading = true;
-    notifyListeners();
+    postFrame(notifyListeners);
+
     if (isMore) {
       _page++;
     }
@@ -24,7 +26,7 @@ class HomeController extends ChangeNotifier {
         pokemonList = value;
       }
       loading = false;
-      notifyListeners();
+      postFrame(notifyListeners);
     });
   }
 }
